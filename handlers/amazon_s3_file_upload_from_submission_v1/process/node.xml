@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="amazon_s3_file_upload_from_submission" name="Amazon S3 File Upload From Submission" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>This handler uploads an existing file from a Kinetic Request CE submission to an Amazon S3 bucket.</description>
+    <helpurl></helpurl>
+    <visible>false</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+        <parameter id="region" label="Region" required="false"
+            tooltip="Id of the region the inteded S3 server is located in (can also be configured as an info value)." />
+        <parameter id="space_slug" label="Space Slug" required="false"
+            tooltip="Slug for the space the submission is in (can also be configured as an info value)."/>
+        <parameter id="bucket" label="Bucket" required="true"
+            tooltip="Name of the bucket to upload to."/>
+        <parameter id="file_name" label="File Name" required="false"
+            tooltip="Name that will be given to the file on upload (if not provided, will default to the default filename stored in Request CE)."/>
+        <parameter id="submission_id" label="Submission Id" required="true"
+            tooltip="Submission Id that the attachment is located on."/>
+        <parameter id="field" label="Field Label" required="true"
+            tooltip="Field Label for the attachment field."/>
+    </parameters>
+    <handler name="amazon_s3_file_upload_from_submission" version="1">
+        <infos>
+            <info name="access_key">&lt;%= @info['access_key'] %&gt;</info>
+            <info name="secret_key">&lt;%= @info['secret_key'] %&gt;</info>
+            <info name="region">&lt;%= @info['region'] %&gt;</info>
+            <info name="request_ce_server">&lt;%= @info['request_ce_server'] %&gt;</info>
+            <info name="request_ce_username">&lt;%= @info['request_ce_username'] %&gt;</info>
+            <info name="request_ce_password">&lt;%= @info['request_ce_password'] %&gt;</info>
+            <info name="space_slug">&lt;%= @info['space_slug'] %&gt;</info>
+            <info name="enable_debug_logging">&lt;%= @info['enable_debug_logging'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="region">&lt;%= @parameters['region'] %&gt;</parameter>
+            <parameter name="space_slug">&lt;%= @parameters['space_slug'] %&gt;</parameter>
+            <parameter name="bucket">&lt;%= @parameters['bucket'] %&gt;</parameter>
+            <parameter name="file_name">&lt;%= @parameters['file_name'] %&gt;</parameter>
+            <parameter name="submission_id">&lt;%= @parameters['submission_id'] %&gt;</parameter>
+            <parameter name="field">&lt;%= @parameters['field'] %&gt;</parameter>
+        </parameters>
+    </handler>
+    <results format="xml">
+        <result name="Public Url"/>
+    </results>
+</taskDefinition>

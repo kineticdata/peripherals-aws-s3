@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="amazon_s3_expiring_url_generator" name="Amazon S3 Expiring Url Generator" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>Generate an expiring URL for S3.</description>
+    <helpurl>http://ktc.kineticdata.com/handler/amazon_s3_file_upload/1</helpurl>
+    <visible>false</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+        <parameter id="region" label="Region" required="false"
+          tooltip="Name of the region of the bucket (required if not specified as an info value)."/>
+        <parameter id="bucket" label="Bucket" required="true"
+            tooltip="Name of the desired bucket."/>
+        <parameter id="key" label="Key" required="true"
+            tooltip="Name of the key in desired bucket (path + filename)."/>
+        <parameter id="seconds_to_expire" label="Seconds To Expire" required="true"
+            tooltip="Number of seconds in which URL will expire.  This may not exceed 604,800 seconds or one week."/>
+    </parameters>
+    <handler name="amazon_s3_expiring_url_generator" version="1">
+        <infos>
+            <info name="access_key">&lt;%= @info['access_key'] %&gt;</info>
+            <info name="secret_key">&lt;%= @info['secret_key'] %&gt;</info>
+            <info name="region">&lt;%= @info['region'] %&gt;</info>
+            <info name="enable_debug_logging">&lt;%= @info['enable_debug_logging'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="bucket">&lt;%= @parameters['bucket'] %&gt;</parameter>
+            <parameter name="region">&lt;%= @parameters['region'] %&gt;</parameter>
+            <parameter name="key">&lt;%= @parameters['key'] %&gt;</parameter>
+            <parameter name="seconds_to_expire">&lt;%= @parameters['seconds_to_expire'] %&gt;</parameter>
+        </parameters>
+    </handler>
+    <results format="xml">
+        <result name="Public Url"/>
+    </results>
+</taskDefinition>
