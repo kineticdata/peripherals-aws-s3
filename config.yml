@@ -1,7 +1,8 @@
 ---
 repo-name: peripherals-aws-s3
 categories:
-- Cloud
-- DevOps
+  - Cloud
+  - DevOps
 display-name: Amazon S3
-manufacture: Amazon
+manufacturer: Amazon
+description: Amazon Simple Storage Service (Amazon S3) is an object storage service that offers industry-leading scalability, data availability, security, and performance.
