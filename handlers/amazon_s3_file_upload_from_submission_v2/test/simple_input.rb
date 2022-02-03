@@ -11,11 +11,11 @@
   },
   'parameters' => {
     'region' => '',
+    'bucket' => 'aws-bucket',
+    'upload_path' => 'temp/',
+    'acl' => 'private',
     'space_slug' => '',
-    'bucket' => 'assets',
-    'upload_path' => 'foo/',
-    'file_name' => '',
-    'submission_id' => '0e324eca-e68c-11eb-8b62-132c0222e0e1',
-    'field' => 'Image Attachment'
+    'submission_id' => '',
+    'field' => 'Attachment'
   }
 }

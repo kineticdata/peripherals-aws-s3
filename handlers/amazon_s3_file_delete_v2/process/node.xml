@@ -6,13 +6,10 @@
     <visible>false</visible>
     <deferrable>false</deferrable>
     <parameters>
-        <parameter id="region" label="Region" required="true"
-            tooltip="Id of the region the inteded S3 server is located in." />
-        <parameter id="bucket" label="Bucket" required="true"
-            tooltip="Name of the bucket to delete from."/>
-        <parameter id="object_keys" label="File Name" required="true"
-            tooltip="A comma separated list of Object identifiers (ex: path/to/asset.extension) 
-            used to delete the object from the bucket."/>
+        <parameter id="region" label="Region" required="true" tooltip="Id of the region the inteded S3 server is located in." />
+        <parameter id="bucket" label="Bucket" required="true" tooltip="Name of the bucket to delete from." />
+        <parameter id="object_keys" label="File Name" required="true" tooltip="A comma separated list of Object identifiers (ex: path/to/asset.extension) 
+            used to delete the object from the bucket." />
     </parameters>
     <handler name="amazon_s3_file_delete" version="2">
         <infos>
@@ -28,6 +25,6 @@
         </parameters>
     </handler>
     <results format="xml">
-        <result name="Public Url"/>
+        <result name="Results" />
     </results>
 </taskDefinition>

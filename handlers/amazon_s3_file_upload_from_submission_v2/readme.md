@@ -5,17 +5,17 @@ This handler uploads an existing file from a Kinetic Request CE submission to an
 [Region]
   Id of the region the inteded S3 server is located in (can also be configured as an info value).
 
-[Space Slug]
-  Slug for the space the submission is in (can also be configured as an info value).
-
 [Bucket]
   Name of the bucket to upload to.
 
-[Path]
+[Upload Path]
   The path in the s3 bucket to upload the file to.
 
-[File Name]
-  Name that will be given to the file on upload (if not provided, will default to the default filename stored in Request CE).
+[Access Control]
+  The canned ACL to apply to the object. 
+  
+[Space Slug]
+  Slug for the space the submission is in (can also be configured as an info value).
 
 [Submission Id]
   Submission Id that the attachment is located on.
@@ -25,10 +25,10 @@ This handler uploads an existing file from a Kinetic Request CE submission to an
 
 ### Sample Configuration
 Region:                       us-east-1
-Space Slug:
 Bucket:                       sample-files
-Path:                         foo/bar/
-File Name:                    handler-test.txt
+Upload Path:                  foo/bar/
+Access Control:               private
+Space Slug:
 Submission Id:                73f18e87-b2b5-4f2c-b009-9eb8dcdd270c
 Field Label:                  Attachment
 

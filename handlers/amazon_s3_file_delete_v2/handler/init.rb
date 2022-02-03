@@ -20,40 +20,46 @@ class AmazonS3FileDeleteV2
       @parameters[node.attribute('name').value] = node.text.to_s
     end
 
-    @enable_debug_logging = @info_values['enable_debug_logging'].downcase == 'yes' ||
-                            @info_values['enable_debug_logging'].downcase == 'true'
+    @enable_debug_logging = 
+      @info_values['enable_debug_logging'].downcase == 'yes' || 
+      @info_values['enable_debug_logging'].downcase == 'true'
     puts "Parameters: #{@parameters.inspect}" if @enable_debug_logging
 
-    @region = !@info_values["region"].to_s.empty? ? @info_values["region"] : @parameters["region"]
+    @region = !@info_values["region"].to_s.empty? ? 
+      @info_values["region"] : 
+      @parameters["region"]
   end
 
   def execute()
-    s3 = Aws::S3::Client.new(access_key_id: @info_values['access_key'],
+    # Configure the S3 client
+    s3 = Aws::S3::Client.new(
+      access_key_id: @info_values['access_key'],
       secret_access_key: @info_values['secret_key'],
-      region: @region)
-      
-    object_keys = @parameters['object_keys'].split(',')
-
-    puts "Object keys: #{object_keys}" if @enable_debug_logging
+      region: @region
+    )
     
+    # Get list of files to delete
+    object_keys = @parameters['object_keys'].split(',')
+    puts "Object keys: #{object_keys}" if @enable_debug_logging
     delete_objects = Array.new
     object_keys.each { |object_key|
       delete_objects.push({key: object_key})
     }
 
+    puts "Deleting S3 assets from #{@parameters['bucket']}" if @enable_debug_logging
+
+    # Delete files from s3 bucket
     bucket = Aws::S3::Bucket.new(@parameters['bucket'], {client: s3})
-    object = bucket.delete_objects({
+    response = bucket.delete_objects({
       delete: {
         objects: delete_objects,
       }
     })
-
-    puts "Deleting S3 assets from #{@parameters['bucket']}" if @enable_debug_logging
-
+  
     # Build the results XML that will be returned by this handler.
     <<-RESULTS
       <results>
-          <result name="Public Url">#{escape(object.to_json)}</result>
+          <result name="Results">#{escape(response.to_h.to_json)}</result>
       </results>
     RESULTS
   end
