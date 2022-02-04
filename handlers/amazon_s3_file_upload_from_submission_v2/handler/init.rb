@@ -23,9 +23,11 @@ class AmazonS3FileUploadFromSubmissionV2
     @debug_logging_enabled = ["yes","true"].include?(@info_values['enable_debug_logging'].downcase)
     puts "Parameters: #{@parameters.inspect}" if @debug_logging_enabled
 
-    @region = !@info_values["region"].to_s.empty? ? 
-      @info_values["region"] : 
-      @parameters["region"]
+    @raise_error = @parameters["error_handling"] == "Raise Error"
+
+    @region = !@parameters["region"].to_s.empty? ? 
+      @parameters["region"] : 
+      @info_values["region"]
   end
 
   def execute()    
@@ -33,12 +35,11 @@ class AmazonS3FileUploadFromSubmissionV2
     space_slug = @parameters["space_slug"].empty? ? 
       @info_values["space_slug"] : 
       @parameters["space_slug"]
-    if @info_values['request_ce_server'].include?("${space}")
-      source_server = @info_values['request_ce_server'].gsub("${space}", space_slug)
+    source_server = @info_values['request_ce_server'].chomp("/")
+    if source_server.include?("${space}")
+      source_server = source_server.gsub("${space}", space_slug)
     elsif !space_slug.to_s.empty?
-      source_server = @info_values['request_ce_server']+"/"+space_slug
-    else
-      source_server = @info_values['request_ce_server']
+      source_server = "#{source_server}/#{space_slug}"
     end
 
     # Configure the S3 client
@@ -61,7 +62,7 @@ class AmazonS3FileUploadFromSubmissionV2
     submission_api_route = "#{source_server}/app/api/v1/submissions/#{submission_id}?include=values"
     puts "Submission API route: #{submission_api_route}" if @debug_logging_enabled
 
-    # Headers for each server: Authorization, Accept, Content-Type
+    # Headers for each server: Basic Authorization, Accept, Content-Type
     source_headers = http_basic_headers(source_username, source_password)
     
     # Retrieve the submission and values
@@ -73,7 +74,7 @@ class AmazonS3FileUploadFromSubmissionV2
     submission = JSON.parse(res.body)["submission"]
     field = submission["values"][attachment_field]
 
-    public_url = Array.new
+    attachment_url = Array.new
     # If the attachment field value exists
     if !field.nil?
       # Attachment field values are stored as arrays, one map for each file attachment.
@@ -119,11 +120,9 @@ class AmazonS3FileUploadFromSubmissionV2
             message = "Failed to download attachment #{attachment_name} from the source server"
             return handle_exception(message, res)
           end
-          puts "Attachment Name: #{attachment_name}"
+          
           # Add a path to upload file to if provided
-          destination_upload_path = upload_path.empty? ?
-          attachment_name :
-          "#{upload_path}#{attachment_name}"
+          destination_upload_path = "#{upload_path}#{attachment_name}"
     
           puts "S3 upload Path for asset: #{destination_upload_path}" if @debug_logging_enabled
           
@@ -135,7 +134,7 @@ class AmazonS3FileUploadFromSubmissionV2
           )
 
           # Collect the list of response urls
-          public_url.push(object.public_url)
+          attachment_url.push(object.public_url)
         ensure
           # Remove the temp directory along with the downloaded attachment
           FileUtils.rm_rf(tempdir)
@@ -143,10 +142,10 @@ class AmazonS3FileUploadFromSubmissionV2
       end
       
     else
-      puts "Submission attachment field value is empty on the source server: #{source_field_name}" if @enable_debug_logging
+      puts "Submission attachment field value is empty on the source server: #{attachment_field}" if @enable_debug_logging
     end
 
-    results = handle_results(public_url, "")
+    results = handle_results(attachment_url, "")
     puts "Returning results: #{results}" if @enable_debug_logging
     results
   end
@@ -154,11 +153,11 @@ class AmazonS3FileUploadFromSubmissionV2
   ##############################################################################
   # General handler utility functions
   ##############################################################################
-  def handle_results(public_url, error_msg)
+  def handle_results(attachment_url, error_msg)
     <<-RESULTS
     <results>
       <result name="Handler Error Message">#{ERB::Util.html_escape(error_msg)}</result>
-      <result name="Public Url">#{ERB::Util.html_escape(public_url)}</result>
+      <result name="Attachment Url">#{ERB::Util.html_escape(attachment_url.join(","))}</result>
     </results>
     RESULTS
   end

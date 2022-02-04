@@ -25,9 +25,9 @@ class AmazonS3FileDeleteV2
       @info_values['enable_debug_logging'].downcase == 'true'
     puts "Parameters: #{@parameters.inspect}" if @enable_debug_logging
 
-    @region = !@info_values["region"].to_s.empty? ? 
-      @info_values["region"] : 
-      @parameters["region"]
+    @region = !@parameters["region"].to_s.empty? ? 
+      @parameters["region"] : 
+      @info_values["region"]
   end
 
   def execute()
