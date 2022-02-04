@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskInfo version="1.0">
+  <info name="access_key" description="AWS Access Key."></info>
+  <info name="secret_key" type="encrypted" description="AWS Secret Key."></info>
+  <info name="region" description="AWS Region that the S3 object is located in. Also can be inputted as a parameter."></info>
+  <info name="request_ce_server" description="Kinetic Request CE server location."></info>
+  <info name="request_ce_username" description="Kinetic Request CE username."></info>
+  <info name="request_ce_password" type="encrypted" description="Kinetic Request CE password."></info>
+  <info name="space_slug" description="Slug for the space the submission is in (can also be configured as a parameter)."></info>
+  <info name="enable_debug_logging" description="Enable debug logging if the value is set to 'Yes'.">No</info>
+</taskInfo>
