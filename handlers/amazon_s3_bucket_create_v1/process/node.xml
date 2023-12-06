@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="amazon_s3_bucket_create" name="Amazon S3 Bucket Create" schema_version="1.0" version="1">
+    <author>support@kineticdata.com</author>
+    <description>This handler creates and uploads text content to an Amazon S3 Bucket</description>
+    <helpurl>http://ktc.kineticdata.com/handler/amazon_s3_file_upload/1</helpurl>
+    <visible>false</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+        <parameter id="bucket" label="Bucket" required="true"
+            tooltip="Name of the bucket to create."/>
+        <parameter id="region" label="Region" required="false"
+            tooltip="Id of the region the inteded S3 server is located in. If not provided, defaults to info value" />
+        <parameter id="acl" label="ACL" required="false"
+            tooltip="The canned ACL to apply to the bucket. Accepts private, public-read, public-read-write, authenticated-read" />
+        <parameter id="grant_full_control" label="Grant Full Control" required="false"
+            tooltip="Allows grantee the read, write, read ACP, and write ACP permissions on the bucket." />
+        <parameter id="grant_read" label="Grant Read" required="false"
+            tooltip="Allows grantee to list the objects in the bucket." />
+        <parameter id="grant_read_acp" label="Grant Read ACP" required="false"
+            tooltip="Allows grantee to read the bucket ACL." />
+        <parameter id="grant_write" label="Grant Write" required="false"
+            tooltip="Allows grantee to create, overwrite, and delete any object in the bucket." />
+        <parameter id="grant_write_acp" label="Grant Write ACP" required="false"
+            tooltip="Allows grantee to write the ACL for the applicable bucket." />
+        <parameter id="object_lock_enabled_for_bucket" label="Object Lock Enabled (true/false)" required="false"
+            tooltip="Specifies whether you want S3 Object Lock to be enabled for the new bucket." />
+    </parameters>
+    <handler name="amazon_s3_bucket_create" version="1">
+        <infos>
+            <info name="access_key">&lt;%= @info['access_key'] %&gt;</info>
+            <info name="secret_key">&lt;%= @info['secret_key'] %&gt;</info>
+            <info name="region">&lt;%= @info['region'] %&gt;</info>
+            <info name="enable_debug_logging">&lt;%= @info['enable_debug_logging'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="bucket">&lt;%= @parameters['bucket'] %&gt;</parameter>
+            <parameter name="region">&lt;%= @parameters['region'] %&gt;</parameter>
+            <parameter name="acl">&lt;%= @parameters['acl'] %&gt;</parameter>
+            <parameter name="grant_full_control">&lt;%= @parameters['grant_full_control'] %&gt;</parameter>
+            <parameter name="grant_read">&lt;%= @parameters['grant_read'] %&gt;</parameter>
+            <parameter name="grant_read_acp">&lt;%= @parameters['grant_read_acp'] %&gt;</parameter>
+            <parameter name="grant_write">&lt;%= @parameters['grant_write'] %&gt;</parameter>
+            <parameter name="grant_write_acp">&lt;%= @parameters['grant_write_acp'] %&gt;</parameter>
+            <parameter name="object_lock_enabled_for_bucket">&lt;%= @parameters['object_lock_enabled_for_bucket'] %&gt;</parameter>
+        </parameters>
+    </handler>
+    <results format="xml">
+        <result name="Location"/>
+    </results>
+</taskDefinition>
