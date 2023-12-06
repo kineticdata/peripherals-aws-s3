@@ -1,29 +1,43 @@
-== Amazon S3 File Upload
-This handler creates and uploads text content to an Amazon S3 bucket.
+== Amazon S3 Bucket Create
+This handler creates an S3 Bucket in AWS.
 
 === Parameters
-[Region]
-  Id of the region the intended S3 server is located in.
 [Bucket]
-  Name of the bucket to upload to.
-[File Name]
-  Name of the file to upload.
-[File Content]
-  String to upload as the contents of the new file.
+  Name of the bucket to create.
+[Region]
+  Id of the region the inteded S3 server is located in. If not provided, defaults to info value set when importing the handler.
+[ACL]
+  The canned ACL to apply to the bucket. Accepts private, public-read, public-read-write, authenticated-read.
+[Grant Full Control]
+  Allows grantee the read, write, read ACP, and write ACP permissions on the bucket.
+[Grant Read]
+  Allows grantee to list the objects in the bucket.
+[Grant Read ACP]
+  Allows grantee to read the bucket ACL.
+[Grant Write]
+  Allows grantee to create, overwrite, and delete any object in the bucket.
+[Grant Write ACP]
+  Allows grantee to write the ACL for the applicable bucket.
+[Object Lock Enabled (true/false)]
+  Specifies whether you want S3 Object Lock to be enabled for the new bucket. Should be set to true or false
 
 ==== Sample Configuration
-Region:                       us-east-1
-Bucket:                       sample-files
-File Name:                    handler-test.txt
-File Content:                 This is a test
+Bucket:                             sample-bucket-name
+Region:                             us-east-1
+ACL:                                private
+Grant Full Control:                 GrantFullControl
+Grant Read:                         GrantRead
+Grant Read ACP:                     GrantReadACP
+Grant Write:                        GrantWrite
+Grant Write ACP:                    GrantWriteACP
+Object Lock Enabled (true/false):   false
 
 === Results
-[Public Url]
-  A public url for the file that was just uploaded.
+[Location]
+  Location of the created bucket.
 
 === Detailed Description
-This handler creates and uploads text content to an Amazon S3 bucket and then
-returns a public url of the successfully uploaded file. This is done by using
-an account's Access Key and Secret Access Key to authenticate with the Amazon
-S3 server and then uploading the file and its content into the specified S3
-bucket.
+This handler creates a new bucket on Amazon S3 and returns the location of the bucket created. 
+This is done by using an account's Access Key and Secret Access Key to authenticate with the Amazon
+S3 server and then creating the bucket using the parameters that the AWS S3 Create Bucket API accepts. 
+This handler was build using the AWS Ruby SDK. Documentation can be found here: https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html#create_bucket-instance_method
