@@ -1,0 +1,29 @@
+## Amazon S3 File Upload
+This handler creates and uploads text content to an Amazon S3 bucket.
+
+### Parameters
+[Region]
+  * Id of the region the intended S3 server is located in.
+[Bucket]
+  * Name of the bucket to upload to.
+[File Name]
+  * Name of the file to upload.
+[File Content]
+  * String to upload as the contents of the new file.
+
+#### Sample Configuration
+Region:                       us-east-1
+Bucket:                       sample-files
+File Name:                    handler-test.txt
+File Content:                 This is a test
+
+### Results
+[Public Url]
+  * A public url for the file that was just uploaded.
+
+### Detailed Description
+This handler creates and uploads text content to an Amazon S3 bucket and then
+returns a public url of the successfully uploaded file. This is done by using
+an account's Access Key and Secret Access Key to authenticate with the Amazon
+S3 server and then uploading the file and its content into the specified S3
+bucket.

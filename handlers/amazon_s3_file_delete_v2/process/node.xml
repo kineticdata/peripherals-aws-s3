@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskDefinition id="amazon_s3_file_delete" name="Amazon S3 File Delete" schema_version="1.0" version="2">
+    <author>support@kineticdata.com</author>
+    <description>This handler creates and uploads text content to an Amazon S3 Bucket</description>
+    <helpurl>http://ktc.kineticdata.com/handler/amazon_s3_file_upload/1</helpurl>
+    <visible>false</visible>
+    <deferrable>false</deferrable>
+    <parameters>
+        <parameter id="region" label="Region" required="true" tooltip="Id of the region the inteded S3 server is located in." />
+        <parameter id="bucket" label="Bucket" required="true" tooltip="Name of the bucket to delete from." />
+        <parameter id="object_keys" label="File Name" required="true" tooltip="A comma separated list of Object identifiers (ex: path/to/asset.extension) 
+            used to delete the object from the bucket." />
+    </parameters>
+    <handler name="amazon_s3_file_delete" version="2">
+        <infos>
+            <info name="access_key">&lt;%= @info['access_key'] %&gt;</info>
+            <info name="secret_key">&lt;%= @info['secret_key'] %&gt;</info>
+            <info name="region">&lt;%= @info['region'] %&gt;</info>
+            <info name="enable_debug_logging">&lt;%= @info['enable_debug_logging'] %&gt;</info>
+        </infos>
+        <parameters>
+            <parameter name="region">&lt;%= @parameters['region'] %&gt;</parameter>
+            <parameter name="bucket">&lt;%= @parameters['bucket'] %&gt;</parameter>
+            <parameter name="object_keys">&lt;%= @parameters['object_keys'] %&gt;</parameter>
+        </parameters>
+    </handler>
+    <results format="xml">
+        <result name="Results" />
+    </results>
+</taskDefinition>
