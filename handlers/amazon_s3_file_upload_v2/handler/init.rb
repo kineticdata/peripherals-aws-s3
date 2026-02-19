@@ -1,7 +1,7 @@
 # Require the dependencies file to load the vendor libraries
 require File.expand_path(File.join(File.dirname(__FILE__), 'dependencies'))
 
-class AmazonS3BucketCreateV2
+class AmazonS3FileUploadV2
 
   def initialize(input)
     # Set the input document attribute
@@ -25,39 +25,32 @@ class AmazonS3BucketCreateV2
     puts "Parameters: #{@parameters.inspect}" if @enable_debug_logging
 
     @region = !@info_values["region"].to_s.empty? ? @info_values["region"] : @parameters["region"]
-    @region = !@info_values["region"].to_s.empty? ? @info_values["endpoint"] : @parameters["endpoint"]
+    @endpoint = !@info_values["endpoint"].to_s.empty? ? @info_values["endpoint"] : nil
+
   end
 
   def execute()
+
     aws_config = {
       access_key_id: @info_values['access_key'],
+      secret_access_key: @info_values['secret_key'],
       region: @region
     }
-    aws_config[:endpoint] = @endpoint if (!@endpoint.nil? && !@endpoint.empty?)
-    aws_config[:force_path_style] = (!@endpoint.nil? && !@endpoint.empty?)
-    # Setup AWS client
-    client = Aws::S3::Client.new(aws_config)
+    aws_config[:endpoint] = @endpoing if !@endpoint.nil?
+    aws_config[:force_path_style] = !@endpoint.nil?
+    s3 = Aws::S3::Client.new(aws_config)
 
-    # Parse object lock param into a boolean from a string
-    object_lock_param = @parameters['object_lock_enabled_for_bucket'].to_s.downcase == 'yes' ||
-                        @parameters['object_lock_enabled_for_bucket'].to_s.downcase == 'true'
+    bucket = Aws::S3::Bucket.new(@parameters['bucket'], {client: s3})
+    object = bucket.object(@parameters['file_name'])
+    body = @parameters['file_content']
+    object.put(acl: 'public-read', body: body)
+    public_url = object.public_url
 
-    # Create Bucket see https://docs.aws.amazon.com/sdk-for-ruby/v2/api/Aws/S3/Client.html#create_bucket-instance_method
-    resp = client.create_bucket({
-      bucket: @parameters['bucket'],
-      acl: (@parameters['acl'] if !@parameters['acl'].to_s.empty?),
-      grant_full_control: (@parameters['grant_full_control'] if !@parameters['grant_full_control'].to_s.empty?),
-      grant_read: (@parameters['grant_read'] if !@parameters['grant_read'].to_s.empty?),
-      grant_read_acp: (@parameters['grant_read_acp'] if !@parameters['grant_read_acp'].to_s.empty?),
-      grant_write: (@parameters['grant_write'] if !@parameters['grant_write'].to_s.empty?),
-      grant_write_acp: (@parameters['grant_write_acp'] if !@parameters['grant_write_acp'].to_s.empty?),
-      object_lock_enabled_for_bucket: (object_lock_param if !@parameters['object_lock_enabled_for_bucket'].to_s.empty?)
-    })
 
     # Build the results XML that will be returned by this handler.
     <<-RESULTS
       <results>
-          <result name="Location">#{escape(resp.location)}</result>
+          <result name="Public Url">#{escape(public_url)}</result>
       </results>
     RESULTS
   end
