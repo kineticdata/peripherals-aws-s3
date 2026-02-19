@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taskInfo version="2.0">
+  <info name="access_key" description="AWS Access Key."></info>
+  <info name="secret_key" type="encrypted" description="AWS Secret Key."></info>
+  <info name="region" description="AWS Region that the S3 object is located in. Also can be inputted as a parameter.">us-east-1</info>
+  <info name="endpoint" description="AWS Region that the S3 object is located in. Also can be inputted as a parameter.">https://s3.us-gov-west-1.amazonaws.com</info>
+  <info name="enable_debug_logging" description="Enable debug logging if the value is set to 'Yes'.">No</info>
+</taskInfo>
